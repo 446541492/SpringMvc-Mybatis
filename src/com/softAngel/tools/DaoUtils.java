@@ -1,4 +1,4 @@
-package com.softAngel.tools;
+package com.softAngel.admin.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,16 +11,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
  *@author wangl
+ *实体类生成工具
  */
 public class DaoUtils {
-
+	static	final String  	databaseName="exundb";
+	static  final String    username="exunsoftAngle";
+	static	final String 	pass="pro-softAngle123";
+	static	final String 	packageName="admin";
 	/**
 	 * @param args
 	 */
@@ -32,7 +35,8 @@ public class DaoUtils {
 //			e.printStackTrace();
 //		}
 //		System.out.println("ok");
-		createEntity("project");
+		createEntity("personalCenter_myCard");
+
 //		createDAO("User");
 //		insert();
 //		getnames();
@@ -115,10 +119,10 @@ public class DaoUtils {
 //		}
 		
 		StringBuffer dao = new StringBuffer();
-		dao.append("package com.softAngel.dao;\n\n");
+		dao.append("package com.softAngel."+packageName+".dao;\n\n");
 		dao.append("import org.springframework.stereotype.Repository;\n");
-		dao.append("import com.softAngel.beans."+clazzName+";\n");
-		dao.append("import com.softAngel.base.GenericDao;\n\n");
+		dao.append("import com.softAngel."+packageName+".beans."+clazzName+";\n");
+		dao.append("import com.softAngel."+packageName+".base.GenericDao;\n\n");
 		dao.append("@Repository\n");
 		dao.append("public interface "+daoName+" extends GenericDao<"+clazzName+", Integer>  {\n");
 		dao.append("\n");
@@ -131,9 +135,9 @@ public class DaoUtils {
 		}
 		
 		StringBuffer ser = new StringBuffer();
-		ser.append("package com.softAngel.service;\n\n");
-		ser.append("import com.softAngel.base.BaseService;\n");
-		ser.append("import com.softAngel.beans."+clazzName+";\n\n");
+		ser.append("package com.softAngel."+packageName+".service;\n\n");
+		ser.append("import com.softAngel."+packageName+".base.BaseService;\n");
+		ser.append("import com.softAngel."+packageName+".beans."+clazzName+";\n\n");
 		ser.append("public interface "+serviceName+"  extends BaseService<"+clazzName+", Integer>{\n");
 		ser.append("\n");
 		ser.append("}");
@@ -145,16 +149,16 @@ public class DaoUtils {
 		}
 		
 		StringBuffer impl = new StringBuffer();
-		impl.append("package com.softAngel.service.impl;\n\n");
+		impl.append("package com.softAngel."+packageName+".service.impl;\n\n");
 		impl.append("import org.springframework.beans.factory.annotation.Autowired;\n");
 		impl.append("import org.apache.commons.logging.Log;\n");
 		impl.append("import org.apache.commons.logging.LogFactory;\n");
 		impl.append("import org.springframework.stereotype.Service;\n");
-		impl.append("import com.softAngel.base.GenericDao;\n");
-		impl.append("import com.softAngel.base.GenericService;\n");
-		impl.append("import com.softAngel.beans."+clazzName+";\n\n");
-		impl.append("import com.softAngel.dao."+daoName+";\n");
-		impl.append("import com.softAngel.service."+serviceName+";\n\n");
+		impl.append("import com.softAngel."+packageName+".base.GenericDao;\n");
+		impl.append("import com.softAngel."+packageName+".base.GenericService;\n");
+		impl.append("import com.softAngel."+packageName+".beans."+clazzName+";\n\n");
+		impl.append("import com.softAngel."+packageName+".dao."+daoName+";\n");
+		impl.append("import com.softAngel."+packageName+".service."+serviceName+";\n\n");
 		impl.append("@Service(\""+serviceName.substring(0,1).toLowerCase()+serviceName.substring(1)+"\")\n");
 		impl.append("public class "+implName+" extends "+"GenericService<"+clazzName+", Integer> "+" implements "+serviceName+" {\n");
 		impl.append("\n");
@@ -179,7 +183,7 @@ public class DaoUtils {
 		mapper.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
 		mapper.append("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"\n");
 		mapper.append("\"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n");
-		mapper.append("<mapper namespace=\"com.softAngel.dao." + daoName + "\">\n");
+		mapper.append("<mapper namespace=\"com.softAngel."+packageName+".dao." + daoName + "\">\n");
 		mapper.append("\n");
 		mapper.append("\n");
 		mapper.append("\n");
@@ -222,17 +226,16 @@ public class DaoUtils {
             StringBuffer sb = new StringBuffer();
             StringBuffer p = new StringBuffer();
             StringBuffer g = new StringBuffer();
-            sb.append("package com.softAngel.beans;");
+            sb.append("package com.softAngel."+packageName+".beans;");
             sb.append("\n\n");
             sb.append("import java.io.Serializable;\n");
-            sb.append(" import com.softAngel.base.BaseBean;\n");
             sb.append("#import#");
             sb.append("\n");
             sb.append("/**\n");
             sb.append("*@author wangl\n");
             sb.append("*/\n");
             sb.append("@SuppressWarnings(\"serial\")\n");
-            sb.append("public class "+className+" extends BaseBean implements Serializable{ \n\n");
+            sb.append("public class "+className+" implements Serializable{ \n\n");
             
             String imp = "";
             
@@ -242,7 +245,7 @@ public class DaoUtils {
             	
             	String preName = name.substring(0,1).toLowerCase();
             	String javaName =  preName + name.substring(1);
-            	String javaType = "int".equalsIgnoreCase(type)?"Integer":"varchar".equalsIgnoreCase(type)?"String":"datetime".equalsIgnoreCase(type)?"Date":"String";
+            	String javaType = "int".equalsIgnoreCase(type)||"INT UNSIGNED".equalsIgnoreCase(type)?"Integer":"varchar".equalsIgnoreCase(type)?"String":"datetime".equalsIgnoreCase(type)?"Date":"String";
             	
             	if("Date".equals(javaType)) {
             		if("".equals(imp)) {
@@ -273,7 +276,7 @@ public class DaoUtils {
             
             String data = sb.toString().replace("#import#", imp);
             String path = DaoUtils.class.getResource("/").getPath().replace("/WebRoot/WEB-INF/classes/", "");
-    		path = path.substring(1, path.length())+"/src/com/softAngel/beans/";
+    		path = path.substring(1, path.length())+"/src/com/softAngel/"+packageName+"/beans/";
     		
             FileUtils.writeStringToFile(new File(path,className+".java"), data, "utf-8");
             System.out.println("DaoUtils.createEntity() ok");
@@ -300,10 +303,10 @@ public class DaoUtils {
 
 	private static Connection getConnection() throws Exception {
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://192.168.0.200:3306/crowdfunding_db?useUnicode=true&characterEncoding=UTF-8";
+		String url = "jdbc:mysql://192.168.0.200:3306/"+databaseName+"?useUnicode=true&characterEncoding=UTF-8";
 		Connection con = null;
 		Class.forName(driver);
-		con = DriverManager.getConnection(url, "root", "jitianshi");
+		con = DriverManager.getConnection(url, username, pass);
 		return con;
 	}
 	private static void insert(){
@@ -360,7 +363,7 @@ private static void getnames() {
 		ResultSet rs = null;
 		Connection conn = null;
 		StringBuffer sql = new StringBuffer(); 
-		sql.append(" select COLUMN_NAME as columnName ,COLUMN_COMMENT as remarks  from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='crowdfunding_db'");
+		sql.append(" select COLUMN_NAME as columnName ,COLUMN_COMMENT as remarks  from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+databaseName+"'");
 //		sql.append(" left join syscolumns b on  a.major_id=b.id and a.minor_id=b.colid ");
 //		sql.append(" where a.major_id = (select id from sysobjects where name= '"+tableName+"' )");
 //		sql.append(" order by b.colid ");
