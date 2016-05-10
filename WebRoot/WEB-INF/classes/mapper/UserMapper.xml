@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.softAngel.dao.UserDao">
+	<resultMap type="com.softAngel.beans.User" id="UserMap" />
+	
+	<select id="get" parameterType="java.util.Map" resultMap="UserMap">
+		select * from User
+		where userId = #{userId}
+		<if test="userName != null and userName != ''">
+			and userName = #{userName}
+		</if>
+		<if test="password != null and password != ''">
+			and password = #{password}
+		</if>
+	</select>
+	
+	<insert id="insert" parameterType="com.softAngel.beans.User" useGeneratedKeys="true" keyProperty="id">
+		insert into User 
+		(
+			trueName, userName, password, phoneNumber, createDate, sex, address, modifyDate, email, status, delState 
+		)
+		values 
+		(
+			#{trueName}, #{userName}, #{password}, #{phoneNumber}, #{createDate}, #{sex}, #{address}, #{modifyDate},
+			#{email}, #{status}, 0
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.softAngel.beans.User">
+		update User set 
+			trueName = #{trueName},
+			userName = #{userName},
+			password = #{password},
+			phoneNumber = #{phoneNumber},
+			createDate = #{createDate},
+			sex = #{sex},
+			address = #{address},
+			modifyDate = #{modifyDate},
+			email = #{email},
+			status = #{status} 
+		where userId=#{userId}
+	</update>
+	
+	<select id="count" resultType="Integer">
+		select count(*) from User
+	</select>
+	
+	<select id="select" parameterType="java.util.Map" resultMap="UserMap">
+		select * from User limit #{startNum}, #{pageSize}
+	</select>
+	
+	<delete id="delete" parameterType="String">
+        update User set delState = 1
+         WHERE userId in (${value})
+    </delete>
+</mapper>

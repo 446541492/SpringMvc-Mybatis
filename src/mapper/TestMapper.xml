@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.softAngel.dao.TestDao">
+
+<resultMap type="com.softAngel.beans.Test" id="aaa" />
+	<select id="get" parameterType="int" resultMap="aaa">
+		select * from test
+		where id = #{id}
+	</select>
+	<insert id="insert" parameterType="com.softAngel.beans.Test" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into test (name, time
+		)
+		values (#{name,jdbcType=VARCHAR},
+		#{time,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.softAngel.beans.Test">
+		update test set name= #{name} where name='王磊1'
+	</update>
+	<select id="count" resultType="Integer">
+		select count(*) from test
+	</select>
+	<select id="select" parameterType="java.util.Map" resultMap="aaa">
+		select * from test limit #{startNum},#{pageSize}
+	</select>
+
+</mapper>
